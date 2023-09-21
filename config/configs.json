@@ -1,15 +1,17 @@
 {
     "project_prefix": "demo",
     "region_name": "us-east-1",
-    "ddb_auth_table_name": "AuthTable",
+    "ddb_auth_table_name": "SageMakerApiAuthTable",
     "jumpstart_models" :[
         {
             "name" : "Falcon40B",
             "model_id" : "huggingface-llm-falcon-40b-instruct-bf16",
-            "inference_instance_type" : "ml.g5.12xlarge",
+            "inference_instance_count": 1,
+            "inference_instance_type" : "ml.g5.48xlarge",
             "inference_type": "realtime",
+            "public": true,
             "schedule": {
-                "initial_provision_minutes": 90
+                "initial_provision_minutes": 5760
             },
             "integration": {
                 "type": "lambda",
@@ -21,17 +23,20 @@
             "async_api_enabled": true
         },
         {
-            "name" : "FlanT5",
-            "model_id" : "huggingface-text2text-flan-t5-xxl",
-            "inference_instance_type" : "ml.g5.12xlarge",
+            "name" : "Llama",
+            "model_id" : "meta-textgeneration-llama-2-70b-f",
+            "inference_instance_count": 1,
+            "inference_instance_type" : "ml.g5.48xlarge",
             "inference_type": "realtime",
+            "public": true,
             "schedule": {
-                "initial_provision_minutes": 90
+                "initial_provision_minutes": 5760
             },
             "integration": {
-                "type": "api",
+                "type": "lambda",
                 "properties": {
-                    "api_resource_name": "flan"
+                    "lambda_src": "functions/falcon",
+                    "api_resource_name": "llama"
                 }
             },
             "async_api_enabled": true
